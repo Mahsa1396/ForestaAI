@@ -6,3 +6,4 @@ streamlit-chat==0.1.1
 openai==0.28.0
 tiktoken==0.5.1
 faiss-cpu==1.7.4
+beautifulsoup4==4.9.3
