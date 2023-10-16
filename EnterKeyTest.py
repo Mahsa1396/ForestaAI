@@ -39,10 +39,20 @@ st.markdown(f"<h1 style='text-align: center;'>ForestaGPT</h1>", unsafe_allow_htm
 
 
 # Create a text input box 
+#user_input = st.text_input("Enter your API key here:", "")
+
+
+#openai.api_key = user_input 
+
+# Create a text input box
 user_input = st.text_input("Enter your API key here:", "")
 
-
-openai.api_key = user_input 
+if user_input:
+    try:
+        openai.api_key = user_input
+        st.write("API key set successfully")
+    except Exception as e:
+        st.error(f"Error setting API key: {e}")
 
 # Saving the cleaned text and append it to the pdf_merger
 def savePDF(cleaned_text, pdf_merger, arg):
