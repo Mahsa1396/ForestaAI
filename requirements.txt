@@ -7,3 +7,4 @@ openai==0.28.0
 tiktoken==0.5.1
 faiss-cpu==1.7.4
 beautifulsoup4==4.9.3
+reportlab==3.5.68
