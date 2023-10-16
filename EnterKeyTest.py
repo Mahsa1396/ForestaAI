@@ -288,14 +288,15 @@ if "pdf_index" not in st.session_state:
         # Embed into FAISS
         vectorstore = FAISS.from_documents(page_chunks, OpenAIEmbeddings(openai_api_key=openai.api_key))
 
-            
+        # Initialize a counter to create unique keys
+        counter = 0   
     # Define Streamlit Containers
         response_container = st.container()
         container = st.container()
 
     # Set Streamlit Containers
         with container:
-            with st.form(key='my_form', clear_on_submit=True):
+            with st.form(key=f'my_form_{counter}', clear_on_submit=True):
                 user_input = st.text_area("You:", placeholder="Ask me a question!", key='input', height=100) 
                 submit_button = st.form_submit_button(label='Send')
 
@@ -306,7 +307,7 @@ if "pdf_index" not in st.session_state:
                     output = generate_response(user_input, page_chunks)
                     st.session_state['user_message'].append(user_input)
                     st.session_state['ai_message'].append(output)
-
+        counter += 1
         if st.session_state['ai_message']:
             with response_container:
                 if len(st.session_state['ai_message']) == 1:
