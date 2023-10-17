@@ -17,7 +17,7 @@ from reportlab.lib.pagesizes import letter
 from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
-
+import markdown
 # Setup OpenAI
 #openai.organization = config("OPENAI_ORG_ID")
 
@@ -233,8 +233,8 @@ def generate_response(prompt, page_chunks):
         response = chain.run(input_documents=get_relevant_sources, question=prompt)
         print(cb)
     #st.write(response)
-    
-    return response
+    markdown_text = markdown.markdown(response)
+    return markdown_text
 
 if "pdf_index" not in st.session_state:
 
