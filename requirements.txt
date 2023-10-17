@@ -8,3 +8,4 @@ tiktoken==0.5.1
 faiss-cpu==1.7.4
 beautifulsoup4==4.9.3
 reportlab==4.0.5
+Markdown==3.3.4
