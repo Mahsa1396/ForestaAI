@@ -416,7 +416,7 @@ if "pdf_index" not in st.session_state:
     # Set Streamlit Containers
         with container:
             with st.form(key=f'my_form_{counter}', clear_on_submit=True):
-                user_input = st.text_area("You:", placeholder="Ask me a question!", key='input', height=100) 
+                user_input = st.text_area("You:", placeholder="Ask me a question!", key=f'input_{counter}', height=100) 
                 submit_button = st.form_submit_button(label='Send')
 
                 if submit_button and user_input:
