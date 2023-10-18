@@ -18,6 +18,13 @@ from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.callbacks import get_openai_callback
 import markdown
+import re
+
+# div class="content-page-body" url: https://www.packworld.com/leaders/machinery/cartoning/company/13371275/schubert-north-america => schubert
+# select one or more options for web search
+# 
+
+
 # Setup OpenAI
 #openai.organization = config("OPENAI_ORG_ID")
 
@@ -37,12 +44,13 @@ st.session_state.setdefault('user_message', [])
 st.set_page_config(page_title="ChatWith")
 st.markdown(f"<h1 style='text-align: center;'>ForestaGPT</h1>", unsafe_allow_html=True)
 
-
 # Create a text input box 
 #user_input = st.text_input("Enter your API key here:", "")
 
 
 #openai.api_key = user_input 
+
+
 
 # Create a text input box
 user_input = st.text_input("Enter your API key here:", "")
@@ -54,14 +62,29 @@ if user_input:
     except Exception as e:
         st.error(f"Error setting API key: {e}")
 
+
+
+def create_chat_widget():
+    # Generate a unique key for the chat widget
+    chat_key = f"chat_widget_{len(chat_widgets)}"
+    chat_widgets.append(chat_key)
+    return chat.streamlit_chat(key=chat_key)
+
 # Saving the cleaned text and append it to the pdf_merger
 def savePDF(cleaned_text, pdf_merger, arg):
 
     # Create a PDF file
     if arg == 'liquid':
         pdf_file = "liquid.pdf"
-    else:
+    elif arg == 'flex':
         pdf_file = "flex.pdf"
+    elif arg == 'schubert':
+        pdf_file = "schubert.pdf"
+    elif arg == 'schubert':
+        pdf_file = "mordor.pdf"
+    else:
+        pdf_file = "GVR.pdf"
+        
     c = canvas.Canvas(pdf_file, pagesize=letter)
 
     # Set font and font size
@@ -111,14 +134,115 @@ def savePDF(cleaned_text, pdf_merger, arg):
     st.write(f"PDF file '{pdf_file}' created successfully.")
     if pdf_file == "liquid.pdf":
         pdf_merger.append("liquid.pdf")
-    else:
+    elif pdf_file == "flex.pdf":
         pdf_merger.append("flex.pdf")
+    elif pdf_file == "schubert.pdf":
+        pdf_merger.append("schubert.pdf")
+    elif pdf_file == "mordor.pdf":
+        pdf_merger.append("mordor.pdf")
+    else:
+        pdf_merger.append("GVR.pdf")
+        
     st.write("pdf_merger got updated successfully!")
 
     return pdf_merger
     
-    
+def schubert(pdf_merger):
+    # URL of the website to scrape
+    url = "https://www.packworld.com/leaders/machinery/cartoning/company/13371275/schubert-north-america"
 
+    # Send an HTTP GET request to the URL
+    response = requests.get(url)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the HTML content of the page using BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        report_content_divs = soup.find_all("div", class_="content-page-body")
+
+        # Initialize a variable to store the cleaned text
+        cleaned_text = ""
+
+        # Loop through the found elements, extract the text, and clean it
+        for div in report_content_divs:
+            text = div.get_text()
+            cleaned_text += text.strip() + "\n"  # Remove leading/trailing whitespace and add a newline
+            
+            # Remove extra blank lines
+        cleaned_text = "\n".join(line for line in cleaned_text.splitlines() if line.strip())
+         
+        st.write("Done Scraping!")
+        # Save the cleaned text to a PDF file
+        pdf_merger = savePDF(cleaned_text, pdf_merger, "schubert")
+    else:
+      st.write(f"Failed to retrieve content from {url}. Status code: {response.status_code}")
+      
+    return pdf_merger
+
+def mordor(pdf_merger):
+    # URL of the website to scrape
+    url = "https://www.mordorintelligence.com/industry-reports/packaging-industry-in-united-states"
+
+    # Send an HTTP GET request to the URL
+    response = requests.get(url)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the HTML content of the page using BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        report_content_divs = soup.find_all("div", class_="page-content")
+
+        # Initialize a variable to store the cleaned text
+        cleaned_text = ""
+
+        # Loop through the found elements, extract the text, and clean it
+        for div in report_content_divs:
+            text = div.get_text()
+            cleaned_text += text.strip() + "\n"  # Remove leading/trailing whitespace and add a newline
+            
+            # Remove extra blank lines
+        cleaned_text = "\n".join(line for line in cleaned_text.splitlines() if line.strip())
+         
+        st.write("Done Scraping!")
+        # Save the cleaned text to a PDF file
+        pdf_merger = savePDF(cleaned_text, pdf_merger, "mordor")
+    else:
+      st.write(f"Failed to retrieve content from {url}. Status code: {response.status_code}")
+      
+    return pdf_merger
+    
+def GVR(pdf_merger):
+    # URL of the website to scrape
+    url = "https://www.grandviewresearch.com/industry-analysis/food-packaging-market"
+
+    # Send an HTTP GET request to the URL
+    response = requests.get(url)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the HTML content of the page using BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        report_content_divs = soup.find_all("div", class_="report_summary full")
+
+        # Initialize a variable to store the cleaned text
+        cleaned_text = ""
+
+        # Loop through the found elements, extract the text, and clean it
+        for div in report_content_divs:
+            text = div.get_text()
+            cleaned_text += text.strip() + "\n"  # Remove leading/trailing whitespace and add a newline
+            
+            # Remove extra blank lines
+        cleaned_text = "\n".join(line for line in cleaned_text.splitlines() if line.strip())
+         
+        st.write("Done Scraping!")
+        # Save the cleaned text to a PDF file
+        pdf_merger = savePDF(cleaned_text, pdf_merger, "GVR")
+    else:
+      st.write(f"Failed to retrieve content from {url}. Status code: {response.status_code}")
+      
+    return pdf_merger
+     
 # Scraping liquid carton packaging market
 def liquid(pdf_merger):
     # URL of the website to scrape
@@ -213,19 +337,6 @@ def generate_response(prompt, page_chunks):
     system_source_help = {"role": "system", "content": template}
 
     st.session_state['messages'].append({"role": "user", "content": prompt})
-
-    # Get Previous messages and append context
-    #to_send = st.session_state['messages'].copy()
-    #to_send.insert(-1, system_source_help)
-
-    #st.session_state['messages'].append({"role": "user", "content": prompt})
-    #completion = openai.ChatCompletion.create(
-    #    model="gpt-3.5-turbo",
-    #    temperature=0,
-    #    messages=to_send,
-    #)
-    #response = completion.choices[0].message.content
-    #st.session_state['messages'].append({"role": "assistant", "content": response})
     
     llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai.api_key)
     chain = load_qa_chain(llm=llm, chain_type="stuff")
@@ -234,6 +345,8 @@ def generate_response(prompt, page_chunks):
         print(cb)
     #st.write(response)
     markdown_text = markdown.markdown(response)
+    #cleaned_response = markdown_text.replace("<p>", "").replace("</p>", "")
+
     return markdown_text
 
 if "pdf_index" not in st.session_state:
@@ -248,7 +361,7 @@ if "pdf_index" not in st.session_state:
     pdf_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
     
     # Prompt the user to select multiple options
-    selected_options = st.multiselect("Select one or more options:", ["Liquid carton packaging market", "Flexible packaging global market"])
+    selected_options = st.multiselect("Select one or more options:", ["Market Intelligence by Schubert", "Market Intelligence by Mordor", "Market Intelligence by GVR"]) #"Liquid carton packaging market", "Flexible packaging global market"])
 
     # Display the selected options
     st.write(f"You selected: {selected_options}")
@@ -265,6 +378,12 @@ if "pdf_index" not in st.session_state:
             pdf_merger = liquid(pdf_merger)
         if "Flexible packaging global market" in selected_options:
             pdf_merger = flexible(pdf_merger)
+        if "Market Intelligence by Schubert" in selected_options:
+            pdf_merger = schubert(pdf_merger)
+        if "Market Intelligence by Mordor" in selected_options:
+            pdf_merger = mordor(pdf_merger)
+        if "Market Intelligence by GVR" in selected_options:
+            pdf_merger = GVR(pdf_merger)
         
         merged_pdf_filename = 'merged.pdf'
 
@@ -289,11 +408,11 @@ if "pdf_index" not in st.session_state:
         vectorstore = FAISS.from_documents(page_chunks, OpenAIEmbeddings(openai_api_key=openai.api_key))
 
         # Initialize a counter to create unique keys
-        counter = 0   
+        counter = 0    
     # Define Streamlit Containers
         response_container = st.container()
         container = st.container()
-
+        
     # Set Streamlit Containers
         with container:
             with st.form(key=f'my_form_{counter}', clear_on_submit=True):
@@ -315,4 +434,6 @@ if "pdf_index" not in st.session_state:
                 else:
                     for i in range(len(st.session_state['ai_message'])):
                         message(st.session_state["user_message"][i], is_user=True)
+                        #styled_response = f'<div style="font-family: Arial; font-size: 14px;">{st.session_state["ai_message"][i]}</div>'
                         message(st.session_state["ai_message"][i])
+                        #message(styled_response, is_user=False)
