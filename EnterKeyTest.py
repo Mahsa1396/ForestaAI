@@ -344,10 +344,10 @@ def generate_response(prompt, page_chunks):
         response = chain.run(input_documents=get_relevant_sources, question=prompt)
         print(cb)
     #st.write(response)
-    markdown_text = markdown.markdown(response)
+    #markdown_text = markdown.markdown(response)
     #cleaned_response = markdown_text.replace("<p>", "").replace("</p>", "")
 
-    return markdown_text
+    return response
 
 if "pdf_index" not in st.session_state:
 
