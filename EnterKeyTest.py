@@ -1,5 +1,5 @@
 # Libraries
-#tiktoken==0.5.1
+#
 #faiss-cpu==1.7.4
 # Libraries
 import streamlit as st
@@ -13,7 +13,6 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 import os
 import PyPDF2
 import requests
-import PyPDF2
 from bs4 import BeautifulSoup
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
