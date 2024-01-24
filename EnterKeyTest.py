@@ -180,7 +180,7 @@ if "pdf_index" not in st.session_state:
                 if 'ai_message' in st.session_state and len(st.session_state['ai_message']) == 0:
                     with response_container:
                         message(user_input, is_user=True)
-                print(user_input)
+                
                 messages.append({"role": "user", "content": user_input})
                 response = chat_with_openai(pdf_content, messages, openai.api_key)
                 output = response.json()["choices"][0]["message"]
