@@ -10,3 +10,4 @@ Markdown==3.3.4
 Pillow==9.1.0
 cohere==4.44
 tiktoken==0.5.2
+faiss-cpu==1.7.4
