@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run EnterKeyTest.py
+web: sh setup.sh && streamlit run ForestaDoc.py
