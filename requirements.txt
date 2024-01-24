@@ -8,4 +8,5 @@ beautifulsoup4==4.9.3
 reportlab==4.0.5
 Markdown==3.3.4
 Pillow==9.1.0
+cohere==4.44
 tiktoken==0.5.2
