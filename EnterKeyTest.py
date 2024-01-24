@@ -38,7 +38,7 @@ st.session_state.setdefault('user_message', [])
 
 # Setting page title and header
 st.set_page_config(page_title="ChatWith")
-st.markdown(f"<h1 style='text-align: center;'>ForestaGPT</h1>", unsafe_allow_html=True)
+#st.markdown(f"<h1 style='text-align: center;'>ForestaGPT</h1>", unsafe_allow_html=True)
 
 
 # Create a text input box 
