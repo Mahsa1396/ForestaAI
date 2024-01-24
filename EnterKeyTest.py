@@ -1,6 +1,7 @@
 # Libraries
 #tiktoken==0.5.1
 #faiss-cpu==1.7.4
+# Libraries
 import streamlit as st
 from streamlit_chat import message
 import openai
