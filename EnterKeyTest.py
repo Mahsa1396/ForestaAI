@@ -88,44 +88,6 @@ def chat_with_openai(pdf_content, messages, openai_api_key):
     return response
 
 
-# Function for interacting with API
-def generate_response(prompt, page_chunks):
-
-    vectorstore = FAISS.from_documents(page_chunks, OpenAIEmbeddings(openai_api_key=openai.api_key))
-    get_relevant_sources = vectorstore.similarity_search(prompt, k=3)
-
-    template = f"\n\nYou are an AI model trained to answer questions only based on the provided documentation.\n\n{get_relevant_sources[0].page_content}\n\n{get_relevant_sources[1].page_content}"
-
-    with st.expander("Source 1", expanded=False):
-        st.write(get_relevant_sources[0].page_content)
-    with st.expander("Source 2", expanded=False):
-        st.write(get_relevant_sources[1].page_content)
-
-    system_source_help = {"role": "system", "content": template}
-
-    st.session_state['messages'].append({"role": "user", "content": prompt})
-
-    # Get Previous messages and append context
-    #to_send = st.session_state['messages'].copy()
-    #to_send.insert(-1, system_source_help)
-
-    #st.session_state['messages'].append({"role": "user", "content": prompt})
-    #completion = openai.ChatCompletion.create(
-    #    model="gpt-3.5-turbo",
-    #    temperature=0,
-    #    messages=to_send,
-    #)
-    #response = completion.choices[0].message.content
-    #st.session_state['messages'].append({"role": "assistant", "content": response})
-    
-    llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai.api_key)
-    chain = load_qa_chain(llm=llm, chain_type="stuff")
-    with get_openai_callback() as cb:
-        response = chain.run(input_documents=get_relevant_sources, question=prompt)
-        print(cb)
-    #st.write(response)
-    markdown_text = markdown.markdown(response)
-    return markdown_text
 
 
 def read_pdf(file_path):
@@ -140,7 +102,7 @@ def read_pdf(file_path):
   # We need to split the text using Character Text Split such that it should not increse token size
     text_splitter = CharacterTextSplitter(
         separator = "\n",
-        chunk_size = 20000,
+        chunk_size = 50000,
         chunk_overlap  = 10000,
         length_function = len,
     )
