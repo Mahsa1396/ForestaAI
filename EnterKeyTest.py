@@ -102,8 +102,8 @@ def read_pdf(file_path):
   # We need to split the text using Character Text Split such that it should not increse token size
     text_splitter = CharacterTextSplitter(
         separator = "\n",
-        chunk_size = 50000,
-        chunk_overlap  = 10000,
+        chunk_size = 25000,
+        chunk_overlap  = 5000,
         length_function = len,
     )
     texts = text_splitter.split_text(raw_text)
